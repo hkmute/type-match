@@ -1,13 +1,28 @@
 import { Server } from "http";
 import { Server as IOServer } from "socket.io";
+import registerMatch from "./match";
+import registerRoom from "./room";
 
 export const initIOServer = (httpServer: Server) => {
   const io = createIOServer(httpServer);
   io.on("connection", (socket) => {
     console.log("a user connected");
+
+    if (process.env.APP_ENV !== "production") {
+      socket.onAny((event, ...rest) => {
+        console.log(`received ${event}`, rest);
+      });
+      socket.onAnyOutgoing((event, ...rest) => {
+        console.log(`sent ${event}`, rest);
+      });
+    }
+
     socket.on("disconnect", () => {
       console.log("user disconnected");
     });
+
+    registerRoom(socket, io);
+    registerMatch(socket, io);
   });
 };
 
