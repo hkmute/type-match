@@ -7,7 +7,7 @@
     "start": "NODE_ENV=production node dist/main",
     "build": "yarn clean && tsc || echo build done && yarn copy-static",
     "clean": "rm -rf ./dist",
-    "copy-static": "cp -r ./src/static ./dist/",
+    "copy-static": "cp -r ./src/static ./dist/ || true",
     "dev": "nodemon"
   },
   "dependencies": {
