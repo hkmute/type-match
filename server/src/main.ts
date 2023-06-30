@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { createServer } from "http";
 import { initIOServer } from "./io";
 import { initDb } from "./db";
@@ -19,6 +20,15 @@ const bootstrap = async () => {
     req.io = io;
     next();
   });
+
+  app.use(
+    cors({
+      origin: [
+        /^http:\/\/localhost:\d+/,
+        /^https:\/\/type-match\w*\.vercel\.app$/,
+      ],
+    })
+  );
 
   app.use(router);
 
