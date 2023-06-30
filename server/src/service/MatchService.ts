@@ -10,6 +10,7 @@ class MatchService {
     user?: {
       socketId: string;
       name: string;
+      joinAt: Date;
     }
   ) => {
     const newMatch = await Match.create({
@@ -56,16 +57,22 @@ class MatchService {
   };
 
   addUserToMatch = async (
-    user: { socketId: string; name: string },
+    user: { socketId: string; name: string; joinAt: Date },
     matchId: string
   ) => {
-    const { socketId, name } = user;
+    const { socketId, name, joinAt } = user;
     const result = await Match.findOneAndUpdate(
       { _id: matchId, "users.socketId": { $ne: socketId } },
       {
         $addToSet: {
-          users: { socketId, name },
+          users: { socketId, name, joinAt },
         },
+        $push: {
+          users: {
+            $each: [],
+            $sort: { joinAt: 1 },
+          }
+        }
       },
       { new: true }
     );

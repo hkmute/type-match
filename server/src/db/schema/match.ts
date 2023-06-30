@@ -15,6 +15,9 @@ const matchUser = new Schema(
     completeTime: {
       type: Date,
     },
+    joinAt: {
+      type: Date,
+    }
   },
   { timestamps: true }
 );

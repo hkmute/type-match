@@ -17,12 +17,16 @@ const registerJoin = (socket: Socket, io: Server) => {
 
       socket.data.name = name;
       socket.data.roomId = roomId;
+      if (!socket.data.joinAt) {
+        socket.data.joinAt = new Date();
+      }
 
       const match = await matchService.getActiveMatch(roomId);
       if (!match && (await io.in(roomId).fetchSockets()).length === 0) {
         const newMatch = await matchService.createMatch(roomId, {
           socketId: socket.id,
           name,
+          joinAt: socket.data.joinAt,
         });
         socket.join(roomId);
         socket.emit("room:joined", newMatch);
@@ -33,7 +37,7 @@ const registerJoin = (socket: Socket, io: Server) => {
       if (match.status === "P") {
         console.log("add user to match", match.id, socket.id, name);
         const joinedMatch = await matchService.addUserToMatch(
-          { socketId: socket.id, name },
+          { socketId: socket.id, name, joinAt: socket.data.joinAt },
           match.id
         );
         socket.join(roomId);
