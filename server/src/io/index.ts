@@ -24,13 +24,18 @@ export const initIOServer = (httpServer: Server) => {
     registerRoom(socket, io);
     registerMatch(socket, io);
   });
+
+  return io;
 };
 
 const createIOServer = (httpServer: Server) => {
   const io = new IOServer(httpServer, {
     serveClient: false,
     cors: {
-      origin: [/^http:\/\/localhost:\d+/, /^https:\/\/type-match\w*\.vercel\.app$/],
+      origin: [
+        /^http:\/\/localhost:\d+/,
+        /^https:\/\/type-match\w*\.vercel\.app$/,
+      ],
     },
   });
   return io;

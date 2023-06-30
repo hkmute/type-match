@@ -3,6 +3,8 @@ import { useUserStore } from '@/stores/user';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AddNameForm from '@/components/AddNameForm.vue';
+import { nanoid } from 'nanoid';
+import apiClient from '@/api/apiClient';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -10,6 +12,16 @@ const matchId = ref('');
 
 const joinMatch = () => {
   router.push({ name: 'Match', params: { id: matchId.value } });
+};
+
+const handleNewMatch = async () => {
+  const roomId = nanoid();
+  const result = await apiClient.get<{ count: number }>(`/room/${roomId}/player-count`);
+  if (result.data.count !== 0) {
+    handleNewMatch();
+    return;
+  }
+  router.push({ name: 'Match', params: { id: roomId } });
 };
 </script>
 
@@ -34,7 +46,10 @@ const joinMatch = () => {
         </button>
       </form>
 
-      <button class="rounded-md bg-slate-100 px-4 py-2 text-slate-800 hover:bg-slate-300">
+      <button
+        class="rounded-md bg-slate-100 px-4 py-2 text-slate-800 hover:bg-slate-300"
+        @click="handleNewMatch"
+      >
         New Match
       </button>
     </template>
