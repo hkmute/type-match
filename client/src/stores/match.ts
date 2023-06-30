@@ -9,6 +9,7 @@ export type UserData = {
   _id: string;
   socketId: string;
   name: string;
+  joinAt: string;
   completeTime?: string;
   rank?: number;
 };
@@ -78,13 +79,18 @@ export const useMatchStore = defineStore('match', () => {
         }
         return 0;
       });
-      players.value = data.users.map((user) => {
-        const rank = ranks.findIndex((rank) => rank._id === user._id) + 1;
-        return {
-          ...user,
-          rank
-        };
-      });
+      players.value = data.users
+        .map((user) => {
+          const rank = ranks.findIndex((rank) => rank._id === user._id) + 1;
+          return {
+            ...user,
+            rank
+          };
+        })
+        .sort((a, b) => {
+          return a.joinAt > b.joinAt ? 1 : -1;
+        });
+
       joined.value = data.users.findIndex((user) => user.socketId === socket.id) > -1;
       if (
         data.status === 'P' &&
