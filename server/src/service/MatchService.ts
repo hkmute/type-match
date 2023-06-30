@@ -67,12 +67,6 @@ class MatchService {
         $addToSet: {
           users: { socketId, name, joinAt },
         },
-        $push: {
-          users: {
-            $each: [],
-            $sort: { joinAt: 1 },
-          }
-        }
       },
       { new: true }
     );
