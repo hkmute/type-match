@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { createServer } from "http";
 import { initIOServer } from "./io";
 import { initDb } from "./db";
+import router from "./routes";
 
 dotenv.config();
 
@@ -12,7 +13,14 @@ const bootstrap = async () => {
   const port = process.env.PORT;
 
   await initDb();
-  initIOServer(httpServer);
+  const io = initIOServer(httpServer);
+
+  app.use((req, res, next) => {
+    req.io = io;
+    next();
+  });
+
+  app.use(router);
 
   app.get("/", (req, res) => {
     res.send("Hello World!");
