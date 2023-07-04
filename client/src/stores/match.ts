@@ -39,6 +39,7 @@ export const useMatchStore = defineStore('match', () => {
   socket.on('connect', () => {
     socket.on('room:joined', handleMatchData);
     socket.on('match:update', handleMatchData);
+    socket.on('match:finished', handleMatchData);
     socket.on('match:prepare', handleMatchPrepare);
     socket.on('match:to-start', handleMatchToStart);
     socket.on('match:start', handleMatchStart);
@@ -50,6 +51,7 @@ export const useMatchStore = defineStore('match', () => {
     $reset();
     socket.off('room:joined', handleMatchData);
     socket.off('match:update', handleMatchData);
+    socket.off('match:finished', handleMatchData);
     socket.off('match:prepare', handleMatchPrepare);
     socket.off('match:to-start', handleMatchToStart);
     socket.off('match:start', handleMatchStart);
