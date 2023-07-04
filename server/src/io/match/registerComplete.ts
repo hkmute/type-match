@@ -19,8 +19,9 @@ const registerComplete = (socket: Socket, io: Server) => {
       const isAllUserComplete = await matchService.isAllUserComplete(roomId);
       if (isAllUserComplete) {
         const match = await matchService.endMatch(roomId);
-        socket.to(roomId).emit("match:finished", match);
+        io.to(roomId).emit("match:finished", match);
         await scheduleRestart(roomId, io);
+        return;
       }
       //TODO: enforce match finish after limited time
 

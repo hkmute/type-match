@@ -30,7 +30,7 @@ export const useMatchStore = defineStore('match', () => {
   const matchStatus = ref<MatchStatus>('pending');
   const startTime = ref<string>('');
   const players = ref<UserData[]>([]);
-  const countdown = ref<number>(0);
+  const countdown = ref<number>(-1);
   const matchWords = ref<string[]>([]);
   const matchString = computed(() => {
     return matchWords.value.join(' ');
@@ -39,6 +39,7 @@ export const useMatchStore = defineStore('match', () => {
   socket.on('connect', () => {
     socket.on('room:joined', handleMatchData);
     socket.on('match:update', handleMatchData);
+    socket.on('match:finished', handleMatchData);
     socket.on('match:prepare', handleMatchPrepare);
     socket.on('match:to-start', handleMatchToStart);
     socket.on('match:start', handleMatchStart);
@@ -50,6 +51,7 @@ export const useMatchStore = defineStore('match', () => {
     $reset();
     socket.off('room:joined', handleMatchData);
     socket.off('match:update', handleMatchData);
+    socket.off('match:finished', handleMatchData);
     socket.off('match:prepare', handleMatchPrepare);
     socket.off('match:to-start', handleMatchToStart);
     socket.off('match:start', handleMatchStart);
@@ -60,7 +62,7 @@ export const useMatchStore = defineStore('match', () => {
     joined.value = false;
     matchStatus.value = 'pending';
     players.value = [];
-    countdown.value = 0;
+    countdown.value = -1;
     matchWords.value = [];
     startTime.value = '';
   };
@@ -128,6 +130,7 @@ export const useMatchStore = defineStore('match', () => {
 
   const handleMatchStart = async () => {
     matchStatus.value = 'started';
+    countdown.value = -1;
   };
 
   const handleMatchRestart = async (data: { toRestart: number }) => {
