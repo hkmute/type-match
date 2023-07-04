@@ -3,6 +3,7 @@ import { useMatchStore, type UserData } from '@/stores/match';
 import MatchLeaveButton from '@/components/Match/MatchLeaveButton.vue';
 import { useUserStore } from '@/stores/user';
 import { differenceInSeconds, parseISO } from 'date-fns';
+import MatchStatusBadge from './MatchStatusBadge.vue';
 
 const userStore = useUserStore();
 const matchStore = useMatchStore();
@@ -17,11 +18,8 @@ const completeDuration = (player: UserData) => {
 
 <template>
   <div class="flex flex-col rounded bg-slate-100 p-4">
-    <div>
-      Match Status: {{ matchStore.matchStatus }}
-      {{ matchStore.countdown ? matchStore.countdown : undefined }}
-    </div>
-    <div class="flex-1">
+    <MatchStatusBadge />
+    <div class="my-4 flex-1">
       Players:
       <template v-for="player in matchStore.players" :key="player._id">
         <div class="flex justify-between">

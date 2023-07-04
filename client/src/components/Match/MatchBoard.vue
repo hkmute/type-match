@@ -77,8 +77,10 @@ const handleBlur = () => {
 </script>
 
 <template>
-  <div class="grid h-1/2 w-full max-w-7xl grid-cols-4 gap-4">
-    <div class="col-span-3 flex items-center justify-center rounded bg-slate-100 p-2">
+  <div class="flex h-1/2 w-full max-w-7xl grid-cols-1 flex-col gap-4 md:grid md:grid-cols-4">
+    <div
+      class="flex min-h-[50%] items-center justify-center rounded bg-slate-100 p-2 md:col-span-3"
+    >
       <MatchStartButton v-if="showPendingStart" />
       <div
         :class="[

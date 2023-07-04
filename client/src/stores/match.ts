@@ -30,7 +30,7 @@ export const useMatchStore = defineStore('match', () => {
   const matchStatus = ref<MatchStatus>('pending');
   const startTime = ref<string>('');
   const players = ref<UserData[]>([]);
-  const countdown = ref<number>(0);
+  const countdown = ref<number>(-1);
   const matchWords = ref<string[]>([]);
   const matchString = computed(() => {
     return matchWords.value.join(' ');
@@ -62,7 +62,7 @@ export const useMatchStore = defineStore('match', () => {
     joined.value = false;
     matchStatus.value = 'pending';
     players.value = [];
-    countdown.value = 0;
+    countdown.value = -1;
     matchWords.value = [];
     startTime.value = '';
   };
@@ -130,6 +130,7 @@ export const useMatchStore = defineStore('match', () => {
 
   const handleMatchStart = async () => {
     matchStatus.value = 'started';
+    countdown.value = -1;
   };
 
   const handleMatchRestart = async (data: { toRestart: number }) => {
